@@ -16,5 +16,11 @@ public class BankStatementService {
 	public void save(BankStatement statement) {
 		repository.save(statement);
 	}
+	
+	public BankStatement findStatementByAccount(String account) {
+		return repository
+				.findByAccount(account)
+				.get();
+	}
 
 }

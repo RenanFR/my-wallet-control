@@ -62,6 +62,7 @@ public class UploadController {
 					.periodStart(uploadDTO.getPeriodStart())
 					.periodEnd(uploadDTO.getPeriodEnd())
 					.uploadedAt(uploadDTO.getUploadedAt())
+					.fileName(fileName)
 					.fileExtension(uploadDTO.getFileExtension())
 					.columnDate(uploadDTO.getColumnDate())
 					.columnDescription(uploadDTO.getColumnDescription())

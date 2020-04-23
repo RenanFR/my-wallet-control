@@ -1,6 +1,7 @@
 package com.wallet.control.web.service;
 
 import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -12,8 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.HttpMethod;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.ObjectTagging;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -40,6 +43,22 @@ public class UploadService {
         putRequest.setTagging(new ObjectTagging(tags));
 		PutObjectResult putResult = s3.putObject(putRequest);
 		log.info("Object {} uploaded to bucket {} with generated cache ETag {} and version {}", fileName, bucketName, putResult.getETag(), putResult.getVersionId()); 
+	}
+	
+	public String createPreSignedURLtoView(String fileKey) {
+		log.info("Generating pre signed URL for file {}", fileKey);
+        java.util.Date expiration = new java.util.Date();
+        long expTimeMillis = expiration.getTime();
+        expTimeMillis += 1000 * 60 * 60;
+        expiration.setTime(expTimeMillis);
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, fileKey)
+        		.withMethod(HttpMethod.GET)
+        		.withExpiration(expiration);
+        URL url = s3.generatePresignedUrl(request);
+        String preSignedUrl = url.toString();
+        log.info("Successfully created pre signed URL {} with expiration at {}", preSignedUrl);
+		return preSignedUrl;
+		
 	}
 
 }

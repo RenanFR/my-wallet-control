@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.annotation.Transient;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +34,8 @@ public class BankStatement {
 	@Builder.Default
 	private List<BankStatementEntry> entries = new ArrayList<>();
 	
+	private String fileName;
+	
 	private FileExtension fileExtension;
 	
 	private String columnDate;
@@ -41,5 +45,8 @@ public class BankStatement {
 	private String columnValue;
 	
 	private String columnBalance;	
+	
+	@Transient
+	private String preSignedURL;
 
 }
