@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.wallet.control.web.model.Bank;
 import com.wallet.control.web.model.FileExtension;
 
 import lombok.AllArgsConstructor;
@@ -39,6 +40,8 @@ public class StatementUploadDTO {
 	private LocalDate periodEnd;
 	
 	private FileExtension fileExtension;
+	
+	private Bank bank;
 	
 	private MultipartFile file;
 	

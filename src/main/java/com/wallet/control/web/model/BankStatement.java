@@ -38,6 +38,8 @@ public class BankStatement {
 	
 	private FileExtension fileExtension;
 	
+	private Bank bank;
+	
 	private String columnDate;
 	
 	private String columnDescription;

@@ -11,8 +11,7 @@ public class BankStatementService {
 	
 	@Autowired
 	private BankStatementRepository repository;
-	
-	
+
 	public void save(BankStatement statement) {
 		repository.save(statement);
 	}
