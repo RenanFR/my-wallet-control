@@ -8,12 +8,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(of = {
+		"date",
+		"description",
+		"value",
+		"balanceAfter",
+		"lineNumber"
+})
 public class BankStatementEntry {
 	
 	private LocalDate date;

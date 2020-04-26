@@ -15,7 +15,11 @@ public class AmazonS3Config {
 	
 	@Bean
 	public AmazonS3 amazonS3Client(@Autowired AWSCredentials awsCredentials) {
-		AmazonS3 s3Client = AmazonS3ClientBuilder .standard() .withCredentials(new AWSStaticCredentialsProvider(awsCredentials)) .withRegion(Regions.SA_EAST_1) .build();
+		AmazonS3 s3Client = AmazonS3ClientBuilder 
+				.standard() 
+				.withCredentials(new AWSStaticCredentialsProvider(awsCredentials)) 
+				.withRegion(Regions.US_EAST_1) 
+				.build();
 		return s3Client;
 	}
 
