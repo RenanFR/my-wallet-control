@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.wallet.control.web.service.BankStatementService;
+import br.com.wallet.control.web.service.BankStatementService;
 
 @SpringBootTest
 public class BankStatementServiceTests {

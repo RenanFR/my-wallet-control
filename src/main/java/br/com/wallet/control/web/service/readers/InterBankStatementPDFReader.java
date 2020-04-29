@@ -1,6 +1,4 @@
-package com.wallet.control.web;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+package br.com.wallet.control.web.service.readers;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -9,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -17,9 +14,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.ListUtils;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.textract.AmazonTextract;
 import com.amazonaws.services.textract.model.Block;
@@ -30,22 +26,31 @@ import com.amazonaws.services.textract.model.GetDocumentAnalysisResult;
 import com.amazonaws.services.textract.model.S3Object;
 import com.amazonaws.services.textract.model.StartDocumentAnalysisRequest;
 import com.amazonaws.services.textract.model.StartDocumentAnalysisResult;
+import com.opencsv.exceptions.CsvException;
 
+import br.com.wallet.control.web.config.Properties;
+import br.com.wallet.control.web.model.BankStatement;
 import br.com.wallet.control.web.model.BankStatementEntry;
+import lombok.extern.slf4j.Slf4j;
 
-@SpringBootTest
-public class AmazonTextractTest {
+@Service("inter-pdf-reader")
+@Slf4j
+public class InterBankStatementPDFReader implements BankStatementPDFReader {
 	
 	@Autowired
 	private AmazonTextract textractClient;
 	
-	@Test
-	public void shouldReadPDF() throws IOException, InterruptedException, ExecutionException {
-		String s3FileKey = "Extrato de Conta Corrente.pdf";
-		String analysisBucket = "wallet-control-textract";
+	@Autowired
+	private Properties properties;	
+
+	@Override
+	public List<BankStatementEntry> readAndParse(BankStatement bankStatement) throws IOException, CsvException, InterruptedException {
+		//TODO Create aspect to log readers
+		log.info("Starting bank statement entries processing for bank {} and extension {}", bankStatement.getBank().getName(), bankStatement.getFileExtension());		
+		List<BankStatementEntry> entries = new ArrayList<>();
 		S3Object s3Object = new S3Object()
-				.withName(s3FileKey)
-				.withBucket(analysisBucket);
+				.withName(bankStatement.getFileName())
+				.withBucket(properties.getBucketName());
 		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 		ScheduledFuture<?> task = executorService.schedule(() -> {
 			StartDocumentAnalysisRequest analyzeDocumentRequest = new StartDocumentAnalysisRequest()
@@ -53,12 +58,12 @@ public class AmazonTextractTest {
 					.withFeatureTypes(FeatureType.TABLES);
 			StartDocumentAnalysisResult analyzeDocumentResult = textractClient.startDocumentAnalysis(analyzeDocumentRequest);
 			String jobId = analyzeDocumentResult.getJobId();
-			System.out.println("Document analysis task created with Job Id " + jobId);
+			log.info("Document analysis task created with Job Id {}", jobId);
 			return jobId;
 		}, 1, TimeUnit.SECONDS);
 		executorService.scheduleWithFixedDelay(() -> {
 			if (!task.isDone()) {
-				System.out.println("Job creation in progress");
+				log.info("Job creation in progress");
 			}
 			else {
 				String jobId;
@@ -67,10 +72,9 @@ public class AmazonTextractTest {
 					GetDocumentAnalysisRequest textDetectionRequest = new GetDocumentAnalysisRequest().withJobId(jobId);
 					GetDocumentAnalysisResult textDetectionResult = textractClient.getDocumentAnalysis(textDetectionRequest);
 					if (textDetectionResult.getJobStatus().equals("SUCCEEDED")) {
-						System.out.println("Document analysis task " + jobId + " done");
+						log.info("Document analysis task {} done", jobId);
 						List<Block> blocks = textDetectionResult.getBlocks();
-						System.out.println("Result " + textDetectionResult);
-						assertNotNull(blocks);
+						log.info("Result {}", textDetectionResult);
 						blocks.forEach(block -> {
 							if (block.getBlockType().equals("TABLE")) {
 								List<String> cellIds = block.getRelationships().get(0).getIds();
@@ -91,7 +95,6 @@ public class AmazonTextractTest {
 									String row = l.stream().collect(Collectors.joining());
 									rows.add(row);
 								});
-								List<BankStatementEntry> entries = new ArrayList<>();
 								rows.forEach(r -> {
 									try {
 										String[] toParse = r.split("_");
@@ -108,26 +111,27 @@ public class AmazonTextractTest {
 												.lineNumber(page)
 												.build();
 										entries.add(entry);
-										System.out.println(entry);										
 									} catch (DateTimeParseException exception) {
-										System.err.println("Error parsing line " + r);
-										System.err.println(exception.getMessage());
+										log.error("Error parsing line {}", r);
+										log.error(exception.getMessage());
 									}
 								});
-								System.out.println(entries.size() + " lines parsed successfully");
+								bankStatement.setEntries(entries);
+								log.info("{} lines parsed successfully", entries.size());
 							}
 						});
 						executorService.shutdown();
 					} else {
-						System.out.println("Document analysis task " + jobId + " in progress");
+						log.info("Document analysis task {} in progress", jobId);
 					}
 				} catch (Exception e) {
-					System.err.println(e.getMessage());
+					log.error(e.getMessage());
 					
 				}
 			}
 		}, 2, 5, TimeUnit.SECONDS);
 		executorService.awaitTermination(60, TimeUnit.MINUTES);
+		return entries;
 	}
-	
+
 }
