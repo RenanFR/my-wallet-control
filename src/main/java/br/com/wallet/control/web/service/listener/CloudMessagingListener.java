@@ -8,17 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.context.ApplicationContext;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
-import com.opencsv.exceptions.CsvException;
 
 import br.com.wallet.control.web.config.Properties;
+import br.com.wallet.control.web.dto.BankStatementProcessingStatus;
 import br.com.wallet.control.web.model.BankStatement;
 import br.com.wallet.control.web.model.BankStatementEntry;
+import br.com.wallet.control.web.model.JobStatus;
 import br.com.wallet.control.web.service.BankStatementService;
 import br.com.wallet.control.web.service.readers.BankStatementReader;
 import lombok.extern.slf4j.Slf4j;
@@ -40,9 +42,14 @@ public class CloudMessagingListener {
 	@Autowired
 	private AmazonS3 s3;	
 	
+	@Autowired
+	private SimpMessagingTemplate webSocketTemplate;	
+	
+	private static final String WEB_SOCKET_TOPIC = "/topic/statements/account/";
+	
 	@SqsListener("bank-statement-upload-queue")
     public void receiveAndProcessUploadEntries(String message, @Header("SenderId") String senderId) 
-    		throws IOException, CsvException, InterruptedException {
+    		throws IOException {
     	log.info("Received new message with text {} and sender {}", message, senderId);
     	BankStatement bankStatement = bankStatementService.findStatementByUploadId(message);
     	S3Object fileS3 = s3.getObject(properties.getBucketName(), bankStatement.getFileName());
@@ -51,9 +58,17 @@ public class CloudMessagingListener {
 		String qualifier = bankStatement.getBank().toString().toLowerCase() + "-" + bankStatement.getFileExtension().toString().toLowerCase() + "-reader";
 		log.info("Looking for reader implementation with qualifier {}", qualifier);
 		BankStatementReader reader = springContext.getBean(qualifier, BankStatementReader.class);
-		List<BankStatementEntry> entries = reader.readAndParse(bankStatement);
-		bankStatement.setEntries(entries);
-		bankStatementService.save(bankStatement);    	
+		List<BankStatementEntry> entries;
+		try {
+			entries = reader.readAndParse(bankStatement);
+			bankStatement.setEntries(entries);
+			bankStatement.setStatus(JobStatus.SUCCEEDED);
+		} catch (Exception exception) {
+			log.error("Error while reading the statement file and parsing the entries: {}", exception.getMessage());
+			bankStatement.setStatus(JobStatus.FAILED);
+		}
+		bankStatementService.save(bankStatement);   
+		webSocketTemplate.convertAndSend((WEB_SOCKET_TOPIC + bankStatement.getAccount()), new BankStatementProcessingStatus(bankStatement.get_id(), bankStatement.getStatus()));
     }	
 
 }

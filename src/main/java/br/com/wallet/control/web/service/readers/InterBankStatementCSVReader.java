@@ -39,7 +39,7 @@ public class InterBankStatementCSVReader implements BankStatementCSVReader {
 
 	@Override
 	public List<BankStatementEntry> readAndParse(BankStatement bankStatement) throws IOException, CsvException {
-		//TODO Create aspect to log readers
+		// TODO Create aspect to log readers
 		log.info("Starting bank statement entries processing for bank {} and extension {}", bankStatement.getBank().getName(), bankStatement.getFileExtension());
 		List<BankStatementEntry> entries = new ArrayList<>();
 		try (Reader reader = new BufferedReader(new InputStreamReader(bankStatement.getFile().getInputStream()))) {

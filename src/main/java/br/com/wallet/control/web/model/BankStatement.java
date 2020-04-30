@@ -52,6 +52,7 @@ public class BankStatement {
 	
 	private String fileName;
 	
+	@Transient
 	private String originalFileName;
 	
 	private FileExtension fileExtension;
@@ -69,6 +70,6 @@ public class BankStatement {
 	@Transient
 	private String preSignedURL;
 	
-	private String status;
+	private JobStatus status;
 
 }

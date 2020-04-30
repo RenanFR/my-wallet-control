@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import br.com.wallet.control.web.dto.BankStatementAssembler;
 import br.com.wallet.control.web.dto.StatementUploadDTO;
 import br.com.wallet.control.web.model.BankStatement;
+import br.com.wallet.control.web.model.JobStatus;
 import br.com.wallet.control.web.service.BankStatementService;
 import br.com.wallet.control.web.service.CloudMessagingService;
 import br.com.wallet.control.web.service.UploadService;
@@ -37,6 +38,7 @@ public class UploadController {
 			String fileName = uploadDTO.getAccount().replace("-", "") + "_" + (uploadDTO.getPeriodStart().toString().replace("-", "")) + "-" + (uploadDTO.getPeriodEnd().toString().replace("-", "")) + "." + uploadDTO.getFileExtension().toString().toLowerCase();
 			BankStatement bankStatement = BankStatementAssembler.fromDTO(fileName, uploadDTO);
 			bankStatement.setFileName(fileName);
+			bankStatement.setStatus(JobStatus.IN_PROGRESS);
 			String uploadId = bankStatementService.save(bankStatement).get_id();
 			uploadService.uploadToBucket(fileName, uploadDTO.getFile());
 			messageService.publish(uploadId);

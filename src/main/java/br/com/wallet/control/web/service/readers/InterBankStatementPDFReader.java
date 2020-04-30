@@ -45,7 +45,7 @@ public class InterBankStatementPDFReader implements BankStatementPDFReader {
 
 	@Override
 	public List<BankStatementEntry> readAndParse(BankStatement bankStatement) throws IOException, CsvException, InterruptedException {
-		//TODO Create aspect to log readers
+		// TODO Create aspect to log readers
 		log.info("Starting bank statement entries processing for bank {} and extension {}", bankStatement.getBank().getName(), bankStatement.getFileExtension());		
 		List<BankStatementEntry> entries = new ArrayList<>();
 		S3Object s3Object = new S3Object()

@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.wallet.control.web.model.BankStatement;
-import br.com.wallet.control.web.service.FinancialDashboardService;
+import br.com.wallet.control.web.service.BankStatementService;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping("financial")
+@RequestMapping("statements")
 @Slf4j
-public class FinancialDashboardController {
+public class BankStatementController {
 	
 	@Autowired
-	private FinancialDashboardService service;
+	private BankStatementService service;
 	
 	@GetMapping("{account}")
 	public ResponseEntity<List<BankStatement>> getStatementByAccount(@PathVariable("account") String account) {
