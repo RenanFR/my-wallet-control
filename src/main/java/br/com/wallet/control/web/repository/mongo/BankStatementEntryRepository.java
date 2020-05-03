@@ -1,4 +1,4 @@
-package br.com.wallet.control.web.repository;
+package br.com.wallet.control.web.repository.mongo;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

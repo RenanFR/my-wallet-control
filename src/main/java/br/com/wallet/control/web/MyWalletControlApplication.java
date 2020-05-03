@@ -3,11 +3,13 @@ package br.com.wallet.control.web;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = "br.com.wallet.control.web.repository")
+@EnableMongoRepositories(basePackages = "br.com.wallet.control.web.repository.mongo")
+@EnableNeo4jRepositories(basePackages = "br.com.wallet.control.web.repository.neo4j")
 public class MyWalletControlApplication {
-
+	
 	public static void main(String[] args) {
 		SpringApplication.run(MyWalletControlApplication.class, args);
 	}

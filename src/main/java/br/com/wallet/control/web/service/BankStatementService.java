@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.wallet.control.web.model.BankStatement;
-import br.com.wallet.control.web.repository.BankStatementRepository;
+import br.com.wallet.control.web.repository.mongo.BankStatementRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

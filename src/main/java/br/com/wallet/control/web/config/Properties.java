@@ -16,5 +16,11 @@ public class Properties {
 	
 	@Value("${amazon.sqs.queue.name}")
 	private String queueName;
+	
+	@Value("${cloud.aws.credentials.accessKey}")
+	private String accessKey;
+	
+	@Value("${cloud.aws.credentials.secretKey}")
+	private String accessSecret;	
 
 }
