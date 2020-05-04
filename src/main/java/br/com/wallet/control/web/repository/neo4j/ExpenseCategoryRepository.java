@@ -15,4 +15,6 @@ public interface ExpenseCategoryRepository extends Neo4jRepository<ExpenseCatego
 	@Query("MATCH (category:ExpenseCategory)<-[:PARENT_OF]-(parent:ExpenseCategory) WHERE category.name = $0 RETURN parent")
 	Optional<ExpenseCategory> getParentCategory(String childrenNode);
 	
+	ExpenseCategory findByName(String name);
+	
 }

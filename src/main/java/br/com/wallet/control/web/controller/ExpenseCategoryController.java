@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.wallet.control.web.model.ExpenseCategory;
 import br.com.wallet.control.web.service.ExpenseCategoryService;
@@ -38,5 +40,14 @@ public class ExpenseCategoryController {
 		return ResponseEntity.ok(parent.orElse(null));
 	}
 	
+	@PostMapping("{account}")
+	public ResponseEntity<?> addNew(
+			@RequestParam(value = "parentCategory", required = false) String parent, 
+			@RequestParam("childrenCategory") String children, 
+			@PathVariable("account") String account) {
+		log.info("Saving new {} category {} for account {}", parent.equals("undefined")? "parent" : "children", children, account);
+		ExpenseCategory saved = service.appendChildren(parent, children, account);
+		return ResponseEntity.ok(saved);
+	}
 }
 

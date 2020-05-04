@@ -40,6 +40,20 @@ public class ExpenseCategoryService {
 		return founded;
 	}
 	
+	public ExpenseCategory appendChildren(String parent, String children, String account) {
+		ExpenseCategory childrenCategory = ExpenseCategory.builder().name(children).account(account).build();
+		if (!parent.equals("undefined")) {
+			ExpenseCategory foundedParent = repository.findByName(parent);
+			foundedParent.addInner(childrenCategory);
+			childrenCategory.setLevel(foundedParent.getLevel() + 1);
+			ExpenseCategory saved = repository.save(foundedParent);
+			return saved;
+		}
+		childrenCategory.setLevel(1);
+		ExpenseCategory saved = repository.save(childrenCategory);
+		return saved;
+	}
+	
 	private Iterable<ExpenseCategory> createDefaultCategoriesForAccount(String account) {
 		List<ExpenseCategory> defaultCategories = new ArrayList<>();
 		ExpenseCategory level2 = addChildren(account, "Alimentação");
