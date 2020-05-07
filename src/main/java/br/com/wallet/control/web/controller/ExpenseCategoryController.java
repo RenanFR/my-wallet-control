@@ -33,9 +33,12 @@ public class ExpenseCategoryController {
 	}
 	
 	@GetMapping("parent/{children}")
-	public ResponseEntity<ExpenseCategory> findParentCategoryOf(@PathVariable("children") String childrenCategory) {
+	public ResponseEntity<ExpenseCategory> findParentCategoryOf(
+			@PathVariable("children") String childrenCategory,
+			@RequestParam("account") String account
+			) {
 		log.info("Searching parent category of node {}", childrenCategory);
-		Optional<ExpenseCategory> parent = service.findParentCategoryOf(childrenCategory);
+		Optional<ExpenseCategory> parent = service.findParentCategoryOf(childrenCategory, account);
 		parent.ifPresent(p -> log.info("Parent of category {} is category {}", childrenCategory, p.getName()));
 		return ResponseEntity.ok(parent.orElse(null));
 	}

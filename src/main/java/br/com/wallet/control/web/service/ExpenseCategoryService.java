@@ -31,8 +31,8 @@ public class ExpenseCategoryService {
 		return accountCategories;
 	}
 	
-	public Optional<ExpenseCategory> findParentCategoryOf(String childrenCategory) {
-		return repository.getParentCategory(childrenCategory);
+	public Optional<ExpenseCategory> findParentCategoryOf(String childrenCategory, String account) {
+		return repository.getParentCategory(childrenCategory, account);
 	}
 	
 	public ExpenseCategory findByIdentifier(Long id) {
