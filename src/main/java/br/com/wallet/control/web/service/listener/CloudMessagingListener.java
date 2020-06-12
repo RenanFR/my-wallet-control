@@ -45,18 +45,18 @@ public class CloudMessagingListener {
 	@Autowired
 	private SimpMessagingTemplate webSocketTemplate;	
 	
-	private static final String WEB_SOCKET_TOPIC = "/topic/statements/account/";
+	private static final String WEB_SOCKET_TOPIC = "/topic/statements/user/";
 	
 	@SqsListener("bank-statement-upload-queue")
     public void receiveAndProcessUploadEntries(String message, @Header("SenderId") String senderId) 
     		throws IOException {
-    	log.info("Received new message with text {} and sender {}", message, senderId);
+    	log.info("RECEIVED NEW MESSAGE WITH TEXT {} AND SENDER {}", message, senderId);
     	BankStatement bankStatement = bankStatementService.findStatementByUploadId(message);
     	S3Object fileS3 = s3.getObject(properties.getBucketName(), bankStatement.getFileName());
     	InputStream inputStreamS3 = fileS3.getObjectContent();
 		bankStatement.setFile(new MockMultipartFile(fileS3.getKey(), inputStreamS3));
 		String qualifier = bankStatement.getBank().toString().toLowerCase() + "-" + bankStatement.getFileExtension().toString().toLowerCase() + "-reader";
-		log.info("Looking for reader implementation with qualifier {}", qualifier);
+		log.info("LOOKING FOR READER IMPLEMENTATION WITH QUALIFIER {}", qualifier);
 		BankStatementReader reader = springContext.getBean(qualifier, BankStatementReader.class);
 		List<BankStatementEntry> entries;
 		try {
@@ -64,11 +64,11 @@ public class CloudMessagingListener {
 			bankStatement.setEntries(entries);
 			bankStatement.setStatus(JobStatus.SUCCEEDED);
 		} catch (Exception exception) {
-			log.error("Error while reading the statement file and parsing the entries: {}", exception.getMessage());
+			log.error("ERROR WHILE READING THE STATEMENT FILE AND PARSING THE ENTRIES: {}", exception.getMessage());
 			bankStatement.setStatus(JobStatus.FAILED);
 		}
 		bankStatementService.save(bankStatement);   
-		webSocketTemplate.convertAndSend((WEB_SOCKET_TOPIC + bankStatement.getAccount()), new BankStatementProcessingStatus(bankStatement.get_id(), bankStatement.getStatus()));
+		webSocketTemplate.convertAndSend((WEB_SOCKET_TOPIC + bankStatement.getUserId()), new BankStatementProcessingStatus(bankStatement.get_id(), bankStatement.getStatus()));
     }	
 
 }

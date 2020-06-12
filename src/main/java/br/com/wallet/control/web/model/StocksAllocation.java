@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StockAllocation {
+public class StocksAllocation {
 	
 	private String _id;
 	

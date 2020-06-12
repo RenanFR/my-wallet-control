@@ -19,15 +19,17 @@ public class UserStockMarketAllocation {
 	private String _id;
 	
 	@Builder.Default
-	private List<StocksAllocationBySector> currentStocksAllocation = new ArrayList<>();
+	private List<StocksAllocation> currentStocksAllocation = new ArrayList<>();
 	
 	@Builder.Default
-	private List<StocksAllocationBySector> stocksAllocationPlaned = new ArrayList<>();
+	private List<StocksAllocationBySector> stocksAllocationPlanned = new ArrayList<>();
 	
 	private int totalNumberStocks;
 	
 	private double totalValueInStocks;
 	
-	private String account;
+	private double totalValue;
+	
+	private String userId;
 	
 }

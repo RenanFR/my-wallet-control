@@ -8,6 +8,6 @@ import br.com.wallet.control.web.model.BankStatement;
 
 public interface BankStatementRepository extends MongoRepository<BankStatement, String> {
 	
-	List<BankStatement> findByAccount(String account);
+	List<BankStatement> findByUserId(String userId);
 
 }

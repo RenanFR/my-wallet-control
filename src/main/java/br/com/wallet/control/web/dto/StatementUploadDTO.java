@@ -19,7 +19,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(of = {
-		"account",
+		"userId",
 		"periodStart",
 		"periodEnd",
 		"uploadedAt",
@@ -32,7 +32,7 @@ import lombok.ToString;
 @Builder
 public class StatementUploadDTO {
 	
-	private String account;
+	private String userId;
 	
 	private LocalDate periodStart;
 	

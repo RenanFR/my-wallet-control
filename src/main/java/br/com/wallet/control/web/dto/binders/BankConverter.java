@@ -10,7 +10,8 @@ public class BankConverter  implements Converter<String, Bank> {
 
 	@Override
 	public Bank convert(String source) {
-		return source.equals(Bank.INTER.getName())? Bank.INTER : Bank.ITAU;
+		return source.equals(Bank.INTER.getName())? Bank.INTER : 
+			source.equals(Bank.INTER.getName())? Bank.CAIXA : Bank.ITAU;
 	}
 
 }

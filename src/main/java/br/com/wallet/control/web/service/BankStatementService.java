@@ -17,15 +17,15 @@ public class BankStatementService {
 	private BankStatementRepository repository;
 
 	public BankStatement save(BankStatement statement) {
-		log.info("Saving bank statement {} in the Mongo database ", statement);
+		log.info("SAVING BANK STATEMENT {} IN THE MONGO DATABASE ", statement);
 		BankStatement saved = repository.save(statement);
-		log.info("Bank statement saved with id {}", saved.get_id());
+		log.info("BANK STATEMENT SAVED WITH ID {}", saved.get_id());
 		return saved;
 	}
 	
-	public List<BankStatement> findStatementByAccount(String account) {
+	public List<BankStatement> findStatementByUserId(String userId) {
 		return repository
-				.findByAccount(account);
+				.findByUserId(userId);
 	}
 	
 	public BankStatement findStatementByUploadId(String uploadId) {

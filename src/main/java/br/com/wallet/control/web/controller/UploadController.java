@@ -35,7 +35,7 @@ public class UploadController {
 	})
 	public ResponseEntity<String> upload(@ModelAttribute StatementUploadDTO uploadDTO) {
 		try {
-			String fileName = uploadDTO.getAccount().replace("-", "") + "_" + (uploadDTO.getPeriodStart().toString().replace("-", "")) + "-" + (uploadDTO.getPeriodEnd().toString().replace("-", "")) + "." + uploadDTO.getFileExtension().toString().toLowerCase();
+			String fileName = uploadDTO.getUserId().replace("-", "") + "_" + (uploadDTO.getPeriodStart().toString().replace("-", "")) + "-" + (uploadDTO.getPeriodEnd().toString().replace("-", "")) + "." + uploadDTO.getFileExtension().toString().toLowerCase();
 			BankStatement bankStatement = BankStatementAssembler.fromDTO(fileName, uploadDTO);
 			bankStatement.setFileName(fileName);
 			bankStatement.setStatus(JobStatus.IN_PROGRESS);
@@ -45,7 +45,7 @@ public class UploadController {
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
-		return ResponseEntity.ok(uploadDTO.getAccount());
+		return ResponseEntity.ok(uploadDTO.getUserId());
 	}
 	
 }

@@ -22,7 +22,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString(of = {
-		"account",
+		"userId",
 		"periodStart",
 		"periodEnd",
 		"uploadedAt",
@@ -34,7 +34,7 @@ public class BankStatement {
 	
 	private String _id;
 	
-	private String account;
+	private String userId;
 	
 	private LocalDate periodStart;
 	

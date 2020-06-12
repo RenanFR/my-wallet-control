@@ -6,7 +6,7 @@ public class BankStatementAssembler {
 	
 	public static BankStatement fromDTO(String fileName, StatementUploadDTO uploadDTO) {
 		return BankStatement.builder()
-				.account(uploadDTO.getAccount())
+				.userId(uploadDTO.getUserId())
 				.periodStart(uploadDTO.getPeriodStart())
 				.periodEnd(uploadDTO.getPeriodEnd())
 				.uploadedAt(uploadDTO.getUploadedAt())
@@ -18,7 +18,6 @@ public class BankStatementAssembler {
 				.columnValue(uploadDTO.getColumnValue())
 				.columnBalance(uploadDTO.getColumnBalance())
 				.build();
-		
 	}
 
 }
