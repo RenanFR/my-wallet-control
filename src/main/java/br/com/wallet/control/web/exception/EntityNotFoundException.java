@@ -14,7 +14,7 @@ public class EntityNotFoundException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private static final String MESSAGE = "Could not find {} in the database with parameters {}";
+	private static final String MESSAGE = "NÃO FOI POSSÍVEL ENCONTRAR {} NA BASE COM OS PARÂMETROS {}";
 	
 	public EntityNotFoundException(EntityType entityType, Object... params) {
 		super((MESSAGE.substring(0, MESSAGE.indexOf("{")) + 

@@ -1,6 +1,5 @@
 package br.com.wallet.control.web.model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -40,11 +39,7 @@ public class Login implements UserDetails {
 	@Builder.Default
 	private List<Profile> profiles = new ArrayList<>();
 	
-	private BigDecimal bitcoinBalance;
-	
 	private String cpf;
-	
-	private String easynvestPassword;	
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -4,6 +4,7 @@ public enum FileExtension {
 	
     PDF,
     CSV,
-    XLSX	
+    XLSX,
+    TXT
 
 }

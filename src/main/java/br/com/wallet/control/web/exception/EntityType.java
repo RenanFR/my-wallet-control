@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum EntityType {
 	
-	USER("User credentials");
+	USER("USUÁRIO");
 	
 	private String domainDescription;
 	

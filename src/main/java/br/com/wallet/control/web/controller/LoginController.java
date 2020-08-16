@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import br.com.wallet.control.web.dto.UserDTO;
 import br.com.wallet.control.web.model.Login;
 import br.com.wallet.control.web.model.NewLoginDTO;
 import br.com.wallet.control.web.service.LoginService;
@@ -28,14 +29,22 @@ public class LoginController {
 			) {
 		log.info("CREATING NEW USER {}", newLoginDTO.toString());
 		Login newUserAccount = service.registerUserAccount(newLoginDTO);
-		log.info("NEW USER CREATED WITH IDENTIFIER {}", newUserAccount.get_id());
+		log.info("NEW USER CREATED WITH ID {}", newUserAccount.get_id());
 		return ResponseEntity.ok().build();
 	}
 	
 	@GetMapping
-	public ResponseEntity<Login> getUserInfo() {
+	public ResponseEntity<UserDTO> getUserInfo() {
 		Login login = (Login) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return ResponseEntity.ok(login);
+		UserDTO userDTO = UserDTO
+					.builder()
+					._id(login.get_id())
+					.userName(login.getUsername())
+					.cpf(login.getCpf())
+					.userEmail(login.getEmail())
+					.bankAccounts(login.getBankAccounts())
+					.build();
+		return ResponseEntity.ok(userDTO);
 		
 	}
 

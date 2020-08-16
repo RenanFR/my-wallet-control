@@ -1,6 +1,5 @@
 package br.com.wallet.control.web.service;
 
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -38,9 +37,7 @@ public class LoginService implements UserDetailsService {
 			.email(newLoginDTO.getUserEmail())
 			.password(passwordEncoder.encode(newLoginDTO.getPassword()))
 			.bankAccounts(newLoginDTO.getBankAccounts())
-			.bitcoinBalance(newLoginDTO.getBitcoinBalance())
 			.cpf(newLoginDTO.getCpf())
-			.easynvestPassword(Base64.encodeBase64String(newLoginDTO.getEasynvestPassword().getBytes()))
 			.build();
 		loginRepository
 			.findByEmail(user.getEmail())

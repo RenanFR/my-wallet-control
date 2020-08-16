@@ -1,6 +1,7 @@
 package br.com.wallet.control.web.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,11 @@ public class BankStatementService {
 		return repository
 				.findById(uploadId)
 				.get();
+	}
+	
+	public Optional<BankStatement> findStatementByEntryId(String entryId) {
+		return repository
+				.findByEntriesHash(entryId);
 	}
 
 }

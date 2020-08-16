@@ -24,10 +24,10 @@ public class BankStatementController {
 	private BankStatementService service;
 	
 	@GetMapping
-	public ResponseEntity<List<BankStatement>> getStatementByAccount() {
+	public ResponseEntity<List<BankStatement>> getStatementByUser() {
 		Login login = (Login) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String userId = login.get_id();		
-		log.info("SEARCHING FOR BANK STATEMENT TO ACCOUNT {}", userId);
+		log.info("SEARCHING FOR BANK STATEMENT TO USER {}", userId);
 		List<BankStatement> statements = service.findStatementByUserId(userId);
 		return ResponseEntity.ok(statements);
 	}
@@ -38,4 +38,6 @@ public class BankStatementController {
 		BankStatement statement = service.findStatementByUploadId(uploadId);
 		return ResponseEntity.ok(statement);
 	}
+	
+	
 }

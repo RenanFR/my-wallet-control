@@ -11,6 +11,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -40,7 +41,7 @@ public class InterBankStatementCSVReader implements BankStatementCSVReader {
 	@Override
 	public List<BankStatementEntry> readAndParse(BankStatement bankStatement) throws IOException, CsvException {
 		// TODO Create aspect to log readers
-		log.info("Starting bank statement entries processing for bank {} and extension {}", bankStatement.getBank().getName(), bankStatement.getFileExtension());
+		log.info("STARTING BANK STATEMENT ENTRIES PROCESSING FOR BANK {} AND EXTENSION {}", bankStatement.getBank().getName(), bankStatement.getFileExtension());
 		List<BankStatementEntry> entries = new ArrayList<>();
 		try (Reader reader = new BufferedReader(new InputStreamReader(bankStatement.getFile().getInputStream()))) {
 			if (bankStatement.getFileExtension() == FileExtension.CSV) {
@@ -60,8 +61,9 @@ public class InterBankStatementCSVReader implements BankStatementCSVReader {
 							String columnBalance = line[alphabet.indexOf(bankStatement.getColumnBalance().toCharArray()[0])].replace("R$", "").replace("  ", "").replace(".", "").replace(",", ".").trim();
 							String columnDescription = line[alphabet.indexOf(bankStatement.getColumnDescription().toCharArray()[0])].trim();
 							String columnDate = line[alphabet.indexOf(bankStatement.getColumnDate().toCharArray()[0])].trim();
-							log.info("Reading line {}, date {}, description {}, value {}, balance after {}", index, columnDate, columnDescription, columnValue, columnBalance);
+							log.info("READING LINE {}, DATE {}, DESCRIPTION {}, VALUE {}, BALANCE AFTER {}", index, columnDate, columnDescription, columnValue, columnBalance);
 							BankStatementEntry entry = BankStatementEntry.builder()
+									.hash(UUID.randomUUID().toString())
 									.date(LocalDate.parse(columnDate, DateTimeFormatter.ofPattern("dd/MM/yyyy")))
 									.description(columnDescription)
 									.value(new BigDecimal(columnValue))
@@ -70,7 +72,7 @@ public class InterBankStatementCSVReader implements BankStatementCSVReader {
 									.build();
 							entries.add(entry);								
 						} catch (DateTimeParseException parseException) {
-							log.error("Error parsing date from text {}", parseException.getParsedString());
+							log.error("ERROR PARSING DATE FROM TEXT {}", parseException.getParsedString());
 						}
 					}
 				}

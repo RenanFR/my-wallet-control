@@ -24,6 +24,8 @@ import lombok.ToString;
 })
 public class BankStatementEntry {
 	
+	private String hash;
+	
 	private LocalDate date;
 	
 	private String description;
@@ -33,5 +35,7 @@ public class BankStatementEntry {
 	private BigDecimal balanceAfter;
 	
 	private Long lineNumber;
+	
+	private Long idExpenseCategory;
 	
 }

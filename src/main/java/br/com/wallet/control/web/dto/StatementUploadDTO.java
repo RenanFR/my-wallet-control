@@ -19,7 +19,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(of = {
-		"userId",
 		"periodStart",
 		"periodEnd",
 		"uploadedAt",
@@ -32,8 +31,6 @@ import lombok.ToString;
 @Builder
 public class StatementUploadDTO {
 	
-	private String userId;
-	
 	private LocalDate periodStart;
 	
 	private LocalDate periodEnd;
@@ -41,6 +38,8 @@ public class StatementUploadDTO {
 	private FileExtension fileExtension;
 	
 	private Bank bank;
+	
+	private String bankAccount;
 	
 	private MultipartFile file;
 	

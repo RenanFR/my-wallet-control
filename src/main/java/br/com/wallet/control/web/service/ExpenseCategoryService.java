@@ -8,6 +8,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.wallet.control.web.model.DadosLogin;
 import br.com.wallet.control.web.model.ExpenseCategory;
 import br.com.wallet.control.web.repository.neo4j.ExpenseCategoryRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,7 @@ public class ExpenseCategoryService {
 	public ExpenseCategory appendChildren(String parent, String children, String account) {
 		ExpenseCategory childrenCategory = ExpenseCategory.builder().name(children).account(account).build();
 		if (!parent.equals("undefined")) {
-			ExpenseCategory foundedParent = repository.findByName(parent);
+			ExpenseCategory foundedParent = repository.findByNameAndAccount(parent, DadosLogin.get().get_id());
 			foundedParent.addInner(childrenCategory);
 			childrenCategory.setLevel(foundedParent.getLevel() + 1);
 			ExpenseCategory saved = repository.save(foundedParent);
