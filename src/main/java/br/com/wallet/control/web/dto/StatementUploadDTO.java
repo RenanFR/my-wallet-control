@@ -21,6 +21,7 @@ import lombok.ToString;
 @ToString(of = {
 		"periodStart",
 		"periodEnd",
+		"bankAccount",
 		"uploadedAt",
 		"columnDate",
 		"columnDescription",

@@ -1,4 +1,4 @@
-package com.wallet.control.web.cucumber;
+package com.wallet.control.web.cucumber.auth;
 
 import org.junit.runner.RunWith;
 

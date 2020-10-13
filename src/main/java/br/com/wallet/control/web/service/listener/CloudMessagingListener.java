@@ -47,7 +47,7 @@ public class CloudMessagingListener {
 	
 	private static final String WEB_SOCKET_TOPIC = "/topic/statements/user/";
 	
-	@SqsListener("bank-statement-upload-queue")
+	@SqsListener("test-messaging")
     public void receiveAndProcessUploadEntries(String message, @Header("SenderId") String senderId) 
     		throws IOException {
     	log.info("RECEIVED NEW MESSAGE WITH TEXT {} AND SENDER {}", message, senderId);

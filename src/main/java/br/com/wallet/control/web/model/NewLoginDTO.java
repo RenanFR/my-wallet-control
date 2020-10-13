@@ -1,6 +1,5 @@
 package br.com.wallet.control.web.model;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.Getter;
@@ -14,8 +13,6 @@ import lombok.ToString;
 		"userName",
 		"cpf",
 		"password",
-		"easynvestPassword",
-		"bitcoinBalance",
 		"bankAccounts"
 })
 public class NewLoginDTO {
@@ -28,10 +25,6 @@ public class NewLoginDTO {
 	
 	private List<BankAccount> bankAccounts;
 	
-	private BigDecimal bitcoinBalance;
-	
 	private String cpf;
-	
-	private String easynvestPassword;
 	
 }
