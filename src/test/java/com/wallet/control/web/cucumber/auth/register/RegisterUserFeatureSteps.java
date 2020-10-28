@@ -33,7 +33,7 @@ public class RegisterUserFeatureSteps {
 	@Given("I access the login page and doesnt have a user")
 	public void iAccessTheLoginPageAndDoesntHaveAUser() {
 		LOG.info("ACESSANDO COM O DRIVER DO SELENIUM NO ANGULAR");
-		System.setProperty("webdriver.chrome.driver","C:\\Development\\chromedriver.exe");
+		System.setProperty("webdriver.chrome.driver","C:\\Ferramentas\\chromedriver.exe");
 		driver = new ChromeDriver();
 		driver.get("http://localhost:4200/#/login");		
 	}
