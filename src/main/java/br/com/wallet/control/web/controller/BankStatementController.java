@@ -39,5 +39,4 @@ public class BankStatementController {
 		return ResponseEntity.ok(statement);
 	}
 	
-	
 }

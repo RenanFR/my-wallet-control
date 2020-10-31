@@ -62,6 +62,12 @@ public class ExpenseCategoryService {
 		level2.addInner(ExpenseCategory.builder().name("Luxo").account(account).level(3).build());
 		defaultCategories.add(ExpenseCategory
 				.builder()
+				.name("Não classificado")
+				.account(account)
+				.level(1)
+				.build());
+		defaultCategories.add(ExpenseCategory
+				.builder()
 				.name("Planejado")
 				.account(account)
 				.level(1)

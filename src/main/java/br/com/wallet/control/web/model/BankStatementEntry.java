@@ -20,7 +20,8 @@ import lombok.ToString;
 		"description",
 		"value",
 		"balanceAfter",
-		"lineNumber"
+		"lineNumber",
+		"category"
 })
 public class BankStatementEntry {
 	
@@ -37,5 +38,7 @@ public class BankStatementEntry {
 	private Long lineNumber;
 	
 	private Long idExpenseCategory;
+	
+	private ExpenseCategory category;
 	
 }
