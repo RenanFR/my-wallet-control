@@ -8,8 +8,7 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,15 +36,18 @@ public class ExpenseCategory {
 	
 	@Relationship(type = "PARENT_OF", direction = Relationship.OUTGOING)
 	@Builder.Default
-	@JsonBackReference
+	@JsonIgnore
 	Set<ExpenseCategory> childrenCategories = new HashSet<>();
 	
 	@Relationship(type = "PARENT_OF", direction = Relationship.INCOMING)
-	@JsonManagedReference
 	private ExpenseCategory parent;
+	
+	private Boolean root;
+	
+	private Boolean hasChildren;
 	
 	public void addInner(ExpenseCategory category) {
 		this.childrenCategories.add(category);
 	}
-	
+
 }

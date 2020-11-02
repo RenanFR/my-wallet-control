@@ -20,7 +20,7 @@ public class BankStatementService {
 	
 	@Autowired
 	private ExpenseCategoryService expenseCategoryService;
-
+	
 	public BankStatement save(BankStatement statement) {
 		log.info("SAVING BANK STATEMENT {} IN THE MONGO DATABASE ", statement);
 		ExpenseCategory defaultCategory = expenseCategoryService.getFromAccount(statement.getUserId()).stream().filter(cat -> cat.getName().equals("Não classificado")).findFirst().get();
@@ -44,6 +44,10 @@ public class BankStatementService {
 	public Optional<BankStatement> findStatementByEntryId(String entryId) {
 		return repository
 				.findByEntriesHash(entryId);
+	}
+	
+	public void update(BankStatement bankStatement) {
+		repository.save(bankStatement);
 	}
 
 }

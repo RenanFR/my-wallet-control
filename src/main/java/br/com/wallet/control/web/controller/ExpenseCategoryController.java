@@ -9,9 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -91,5 +93,18 @@ public class ExpenseCategoryController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 	
+	@PatchMapping("entries")
+	public ResponseEntity<Void> updateAllEntriesCategory(
+			@RequestBody BankStatement bankStatement) {
+		log.info("UPDATING CATEGORY OF {} ENTRIES OF BANK STATEMENT {}", 
+				bankStatement.getEntries().size(), bankStatement.get_id());
+		bankStatement.getEntries()
+			.stream()
+			.forEach((BankStatementEntry e) -> {
+				log.info("EXPENSE ENTRY {} IS OF NOW OF TYPE {}", e.getDescription(), e.getCategory().getName());
+			});
+		statementService.update(bankStatement);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
 }
 

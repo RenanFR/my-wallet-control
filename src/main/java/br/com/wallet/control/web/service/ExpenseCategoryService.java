@@ -29,6 +29,10 @@ public class ExpenseCategoryService {
 				.forEach(defaultCategory -> categoriesToReturn.add(defaultCategory));
 			return categoriesToReturn;
 		}
+		accountCategories.forEach(cat -> {
+			cat.setRoot(!Optional.ofNullable(cat.getParent()).isPresent());
+			cat.setHasChildren(!cat.getChildrenCategories().isEmpty());
+		});
 		return accountCategories;
 	}
 	
